@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Loeme /etc/passwd failist kasutajate nimed ja kuva need
+awk -F':' '{print $1}' /etc/passwd

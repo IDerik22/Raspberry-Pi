@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Defineerime funktsiooni varunda
+varunda() {
+    # Kontrollime, kas funktsioonile anti piisavalt argumente
+    if [ $# -ne 1 ]; then
+        echo "Kasutamine: varunda <failitee>"
+        return 1
+    fi
+
+    # Võtame vastu faili tee
+    failitee="$1"
+
+    # Kontrollime, kas antud fail on olemas
+    if [ ! -f "$failitee" ]; then
+        echo "Hoiatus: Fail $failitee ei ole olemas!"
+        return 1
+    fi
+
+    # Määrame kuupäeva ja kellaaegaga varukoopia nime
+    kuupäevajaeg=$(date +"%Y-%m-%d_%H-%M-%S")
+    varukoopia_nimi="${failitee##*/}_${kuupäevajaeg}.txt"
+
+    # Loome varukoopiate kausta, kui see puudub
+    varukoopiad_kaust=$(dirname "$failitee")/backup
+    mkdir -p "$varukoopiad_kaust"
+
+    # Kopeerime faili varukoopiatesse
+    cp "$failitee" "$varukoopiad_kaust/$varukoopia_nimi"
+
+    echo "Fail $failitee varundatud kui $varukoopiad_kaust/$varukoopia_nimi"
+}
+
+# Kasutame funktsiooni, andes talle failitee
+varunda "/kodu/kasutaja/minufail.txt"

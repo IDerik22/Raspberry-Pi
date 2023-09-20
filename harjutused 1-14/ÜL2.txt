@@ -1,0 +1,1 @@
+ping -c 3 -s 1016 -a -i 3 metshein.com 192.168.1.14

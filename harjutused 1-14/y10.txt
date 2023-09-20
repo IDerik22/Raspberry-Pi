@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Prompt the user for a username
+read -p "Enter a username: " username
+
+# Prompt for a password (without displaying it)
+read -s -p "Enter a password: " password
+echo
+
+# Prompt for a group (default to "guest" group if not provided)
+read -p "Enter a group name (press ENTER for default 'guest' group): " group
+group=${group:-guest}
+
+# Check if the group exists, and if not, create it
+if ! grep -q "^$group:" /etc/group; then
+    sudo groupadd $group
+fi
+
+# Create the user
+sudo useradd -m -g $group -s /bin/bash $username
+
+# Set the user's password
+echo "$username:$password" | sudo chpasswd
+
+# Create a directory and a file in the user's home directory
+sudo -u $username mkdir -p /home/$username/katalog
+sudo -u $username touch /home/$username/katalog/teretulemast_$username.txt
+
+echo "User $username created with group $group."
+

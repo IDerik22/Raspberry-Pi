@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Kontrollime, kas skriptile anti piisavalt argumente
+if [ $# -ne 3 ]; then
+    echo "Kasutamine: $0 <fail> <soovitud_õigused> <failinimi>"
+    exit 1
+fi
+
+# Kasutaja antud faili tee
+faili_tee="$1"
+
+# Kasutaja antud soovitud õigused
+soovitud_oigused="$2"
+
+# Kasutaja antud failinimi
+failinimi="$3"
+
+# Kontrollime, kas fail eksisteerib
+if [ -e "$faili_tee" ]; then
+    # Kontrollime, kas antud tee viitab failile
+    if [ -f "$faili_tee" ]; then
+        # Kontrollime faili õigusi ja võrdleme neid soovitud õigustega
+        tegelikud_oigused=$(stat -c %a "$faili_tee")
+        if [ "$tegelikud_oigused" = "$soovitud_oigused" ]; then
+            echo "Fail $failinimi on olemas ja õigustega korrektselt määratud."
+        else
+            echo "Hoiatus: Faili $failinimi õigused on $tegelikud_oigused, peaksid olema $soovitud_oigused!"
+        fi
+    else
+        echo "Hoiatus: $failinimi ei ole fail!"
+    fi
+else
+    echo "Hoiatus: $failinimi ei ole olemas!"
+fi
